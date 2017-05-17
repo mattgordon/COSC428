@@ -7,6 +7,7 @@
 //
 
 #import "VisionViewController.h"
+#import "PrefsManager.h"
 
 using namespace cv;
 
@@ -37,8 +38,11 @@ using namespace cv;
     self.videoCamera.defaultFPS = 30;
     self.videoCamera.grayscaleMode = YES;
     
-    self.kernelSize = 3;
-    self.kernelStepper.value = 3;
+    self.kernelSize = (int)[PrefsManager getMedianBlurSize];
+    self.kernelStepper.value = self.kernelSize;
+    
+    self.thresholdSlider.value = [PrefsManager getCannyThreshold];
+    
     [self updateKernelSize];
 }
 
@@ -67,7 +71,6 @@ using namespace cv;
 {
     std::vector<Vec4i> lines;
     
-    
     // Do some OpenCV stuff with the image
     medianBlur(image, image, self.kernelSize);
     Canny(image, image, self.thresholdSlider.value, self.thresholdSlider.value * 3);
@@ -75,13 +78,17 @@ using namespace cv;
     HoughLinesP(image, lines, 1, CV_PI/180, 80, 30, 10);
     cvtColor(image, image, CV_GRAY2BGR);
     for ( size_t i = 0; i < lines.size(); i++) {
-        line(image, cv::Point(lines[i][0], lines[i][1]), cv::Point(lines[i][2], lines[i][3]), Scalar(0, 0, 255), 3, 8);
+        line(image, cv::Point(lines[i][0], lines[i][1]),
+             cv::Point(lines[i][2], lines[i][3]), Scalar(0, 0, 255), 3, 8);
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [[self videoCamera] stop];
+    [PrefsManager setMedianBlurSize:[self kernelSize]];
+    [PrefsManager setCannyThreshold:[[self thresholdSlider] value]];
     [super viewWillDisappear:animated];
 }
+
 
 @end

@@ -13,5 +13,6 @@
 @interface MotionViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet GravityView *gravityView;
+@property (weak, nonatomic) IBOutlet UILabel *angleLabel;
 
 @end

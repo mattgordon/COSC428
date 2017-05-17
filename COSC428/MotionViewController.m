@@ -7,6 +7,7 @@
 //
 
 #import "MotionViewController.h"
+#include <math.h>
 
 @interface MotionViewController ()
 
@@ -49,7 +50,10 @@
 }
 
 - (void)updateVectorDisplayForX:(double)x AndY:(double)y {
+    // update the view giving the visual representation of the gravity vector
     [[self gravityView] updateViewForX:x AndY:y];
+    double angle = acos(-x / sqrt(x*x + y*y)) * (180.0 / M_PI);
+    [[self angleLabel] setText:[NSString stringWithFormat:@"%.2f", angle]];
 }
 
 - (void)stopGravityUpdates {

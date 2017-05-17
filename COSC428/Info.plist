@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Find floor and walls</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -28,6 +30,9 @@
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
+		<string>accelerometer</string>
+		<string>gyroscope</string>
+		<string>video-camera</string>
 		<string>armv7</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>

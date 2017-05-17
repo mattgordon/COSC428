@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		C90812F41EAEFF8F0043E5D3 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C90812F31EAEFF8F0043E5D3 /* CoreMotion.framework */; };
 		C90812F71EAF04F60043E5D3 /* GravityView.m in Sources */ = {isa = PBXBuildFile; fileRef = C90812F61EAF04F60043E5D3 /* GravityView.m */; };
+		C90812F91EAF286E0043E5D3 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = C90812F81EAF286E0043E5D3 /* README.md */; };
+		C90812FC1EAF402F0043E5D3 /* CombinedViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = C90812FB1EAF402F0043E5D3 /* CombinedViewController.mm */; };
+		C90812FF1EAF43510043E5D3 /* PrefsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C90812FE1EAF43510043E5D3 /* PrefsManager.m */; };
 		C95176EC1EA5A4E4006D81A0 /* MotionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C95176EB1EA5A4E4006D81A0 /* MotionViewController.m */; };
 		C9D7CE1F1EA323D50040F975 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7CE1E1EA323D50040F975 /* main.m */; };
 		C9D7CE221EA323D50040F975 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7CE211EA323D50040F975 /* AppDelegate.m */; };
@@ -28,6 +31,11 @@
 		C90812F31EAEFF8F0043E5D3 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		C90812F51EAF04F60043E5D3 /* GravityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GravityView.h; sourceTree = "<group>"; };
 		C90812F61EAF04F60043E5D3 /* GravityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GravityView.m; sourceTree = "<group>"; };
+		C90812F81EAF286E0043E5D3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		C90812FA1EAF402F0043E5D3 /* CombinedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CombinedViewController.h; sourceTree = "<group>"; };
+		C90812FB1EAF402F0043E5D3 /* CombinedViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CombinedViewController.mm; sourceTree = "<group>"; };
+		C90812FD1EAF43510043E5D3 /* PrefsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefsManager.h; sourceTree = "<group>"; };
+		C90812FE1EAF43510043E5D3 /* PrefsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrefsManager.m; sourceTree = "<group>"; };
 		C95176EA1EA5A4E4006D81A0 /* MotionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MotionViewController.h; sourceTree = "<group>"; };
 		C95176EB1EA5A4E4006D81A0 /* MotionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MotionViewController.m; sourceTree = "<group>"; };
 		C9D7CE1A1EA323D50040F975 /* COSC428.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = COSC428.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +83,7 @@
 		C9D7CE111EA323D50040F975 = {
 			isa = PBXGroup;
 			children = (
+				C90812F81EAF286E0043E5D3 /* README.md */,
 				C9D7CE1C1EA323D50040F975 /* COSC428 */,
 				C9D7CE1B1EA323D50040F975 /* Products */,
 				C9D7CE341EA325150040F975 /* Frameworks */,
@@ -94,17 +103,21 @@
 			children = (
 				C9D7CE201EA323D50040F975 /* AppDelegate.h */,
 				C9D7CE211EA323D50040F975 /* AppDelegate.m */,
-				C95176EA1EA5A4E4006D81A0 /* MotionViewController.h */,
-				C95176EB1EA5A4E4006D81A0 /* MotionViewController.m */,
-				C9D7CE231EA323D50040F975 /* VisionViewController.h */,
-				C9D7CE241EA323D50040F975 /* VisionViewController.mm */,
-				C9D7CE4B1EA329B50040F975 /* COSC428-Prefix.pch */,
-				C9D7CE261EA323D50040F975 /* Main.storyboard */,
+				C90812FA1EAF402F0043E5D3 /* CombinedViewController.h */,
+				C90812FB1EAF402F0043E5D3 /* CombinedViewController.mm */,
 				C90812F51EAF04F60043E5D3 /* GravityView.h */,
 				C90812F61EAF04F60043E5D3 /* GravityView.m */,
-				C9D7CE291EA323D50040F975 /* Assets.xcassets */,
+				C95176EA1EA5A4E4006D81A0 /* MotionViewController.h */,
+				C95176EB1EA5A4E4006D81A0 /* MotionViewController.m */,
+				C90812FD1EAF43510043E5D3 /* PrefsManager.h */,
+				C90812FE1EAF43510043E5D3 /* PrefsManager.m */,
+				C9D7CE231EA323D50040F975 /* VisionViewController.h */,
+				C9D7CE241EA323D50040F975 /* VisionViewController.mm */,
 				C9D7CE2B1EA323D50040F975 /* LaunchScreen.storyboard */,
+				C9D7CE261EA323D50040F975 /* Main.storyboard */,
+				C9D7CE291EA323D50040F975 /* Assets.xcassets */,
 				C9D7CE2E1EA323D50040F975 /* Info.plist */,
+				C9D7CE4B1EA329B50040F975 /* COSC428-Prefix.pch */,
 				C9D7CE1D1EA323D50040F975 /* Supporting Files */,
 			);
 			path = COSC428;
@@ -209,11 +222,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C90812F91EAF286E0043E5D3 /* README.md in Sources */,
 				C9D7CE251EA323D50040F975 /* VisionViewController.mm in Sources */,
 				C9D7CE221EA323D50040F975 /* AppDelegate.m in Sources */,
 				C95176EC1EA5A4E4006D81A0 /* MotionViewController.m in Sources */,
+				C90812FF1EAF43510043E5D3 /* PrefsManager.m in Sources */,
 				C9D7CE1F1EA323D50040F975 /* main.m in Sources */,
 				C90812F71EAF04F60043E5D3 /* GravityView.m in Sources */,
+				C90812FC1EAF402F0043E5D3 /* CombinedViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
