@@ -10,4 +10,13 @@
 
 @interface PrefsManager : NSObject
 
++ (NSInteger)getMedianBlurSize;
++ (void)setMedianBlurSize:(NSInteger)value;
+
++ (double)getCannyThreshold;
++ (void)setCannyThreshold:(double)value;
+
++ (NSInteger)getSampleInteger;
++ (void)setSampleInteger:(NSInteger)value;
+
 @end
