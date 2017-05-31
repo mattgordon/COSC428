@@ -19,6 +19,8 @@ using namespace cv;
 
 @end
 
+
+// scale a line segment to
 Vec4i scaledLineSegment(Vec4i inLine, double scale) {
     double x1 = inLine[0];
     double y1 = inLine[1];
@@ -37,6 +39,7 @@ Vec4i scaledLineSegment(Vec4i inLine, double scale) {
                  x1 + xNormed * scale, y1 + yNormed * scale);
 }
 
+// find a point perpendicular to the line, with an offset from the line
 Vec2i perpPoint(Vec4i inLine, double offset) {
     double x1 = inLine[0];
     double y1 = inLine[1];
@@ -62,6 +65,11 @@ double _cannyThreshold = 0;
 double _gravityX, _gravityY, _gravityZ, _normGravityX, _normGravityY, _normGravityZ,
        _gravityNorm, _gravityDotProductXAxis, _tilt, _mag;
 
+// THIS IS A REALLY UGLY HACK
+// The 'proper' way is to get the videoFieldOfView property from the appropriate
+// AVCaptureDeviceFormat instance, but CvVideoCamera does not seem to expose this
+// in a convenient way
+// This is valid for iPhone 7 rear camera:
 double _cameraFov = 58.975/2;
 
 BOOL _shouldSample;
@@ -74,6 +82,8 @@ Mat _dilutionKernel;
     
     _kernelSize = [PrefsManager getMedianBlurSize];
     _cannyThreshold = [PrefsManager getCannyThreshold];
+    
+    // Set up the camera
     
     self.videoCamera = [[CvVideoCamera alloc] initWithParentView:self.imageView];
     self.videoCamera.delegate = self;
@@ -133,24 +143,23 @@ Mat _dilutionKernel;
     
     cvtColor(image, image, CV_RGBA2BGR);
     
-    Mat workingImage;
-    Mat workingMask = Mat(image.rows, image.cols, CV_8UC1);
-    Mat thresholder = Mat(image.rows, image.cols, CV_8UC1);
-    Mat workingBinary = Mat(image.rows, image.cols, CV_8UC1);
+    
+    Mat workingImage; // grayscale working image for Canny, Hough
+    Mat workingMask = Mat(image.rows, image.cols, CV_8UC1); // Mask per line
+    Mat thresholder = Mat(image.rows, image.cols, CV_8UC1); // Cumulative thresholding image
+    Mat workingBinary = Mat(image.rows, image.cols, CV_8UC1); // Binary mask for above-horizon
     cvtColor(image, workingImage, CV_BGR2GRAY);
     
     double xDiff, yDiff, dotProductNormalised, angle, z, newX1, newY1, newX2, newY2;
     Scalar colour;
     
-    // Do some OpenCV stuff with the image
+    
     medianBlur(workingImage, workingImage, (int)_kernelSize);
     Canny(workingImage, workingImage, _cannyThreshold, _cannyThreshold * 3);
-    //cv::dilate(workingImage, workingImage, _dilutionKernel);
     
     HoughLinesP(workingImage, allLines, 1, CV_PI/180, 80, 30, 10);
-    //cvtColor(image, image, CV_GRAY2BGR);
     
-    // put 'horizon line' on image based on z vector
+    // calculate artificial horizon
     // centre point
     z = (_tilt / _cameraFov) * (image.rows / 2);
     newX1 = _normGravityY * image.rows  + z*_normGravityX + image.cols/2;
@@ -193,12 +202,14 @@ Mat _dilutionKernel;
                  cv::Point(allLines[i][2], allLines[i][3]),
                  Scalar(255, 255, 0), 3, 8);
             workingMask.setTo(Scalar(0));
+            
+            // distance from horizon
             double dist = 2 * sqrt(((newX1 + newX2) / 2 - (allLines[i][0] + allLines[i][2])/2)*
                                    ((newX1 + newX2) - (allLines[i][0] + allLines[i][2])/2) +
                                    ((newY1 + newY2) / 2 - (allLines[i][1] + allLines[i][3])/2)*
                                    ((newY1 + newY2) - (allLines[i][1] + allLines[i][3])/2)) / image.rows;
             if (angle < 120 && angle > 30){
-                dist+=1;
+                dist+=1; // tight horizontal line
             }
             
             
@@ -209,51 +220,10 @@ Mat _dilutionKernel;
             double fillY = max(0.0, min(allLines[i][1] - _normGravityY*2, (double)image.rows-1));
             floodFill(workingMask, cv::Point(fillX, fillY), Scalar(floor(2 + dist)));
             
-            /*cv::rectangle(workingMask, cv::Point(allLines[i][2], allLines[i][3]),
-                          perpPoint(allLines[i], 400), Scalar(floor(2+dist)));*/
             cv::add(workingMask, thresholder, thresholder);
         }
     }
     
-
-    /*
-    for (size_t i = 0; i < verticalLines.size(); i++) {
-        
-        line(image, cv::Point(verticalLines[i][0], verticalLines[i][1]),
-             cv::Point(verticalLines[i][2], verticalLines[i][3]),
-             Scalar(0, 255, 255), 3, 8);
-        if (verticalLines[i][1] >  verticalLines[i][3]) {
-            if (i == 0) {
-                line(workingMask, cv::Point(0, verticalLines[i][1]),
-                     cv::Point(verticalLines[i][0], verticalLines[i][1]),
-                     Scalar(5), 2, 8);
-            } else {
-                line(workingMask, cv::Point(prevlineX, prevlineY),
-                     cv::Point(verticalLines[i][0], verticalLines[i][1]),
-                     Scalar(5), 2, 8);
-            }
-            prevlineX = verticalLines[i][0];
-            prevlineY = verticalLines[i][1];
-        } else {
-            if (i == 0) {
-                line(workingMask, cv::Point(0, verticalLines[i][3]),
-                     cv::Point(verticalLines[i][2], verticalLines[i][3]),
-                     Scalar(5), 2, 8);
-            } else {
-                line(workingMask, cv::Point(prevlineX, prevlineY),
-                     cv::Point(verticalLines[i][2], verticalLines[i][3]),
-                     Scalar(5), 2, 8);
-            }
-            prevlineX = verticalLines[i][2];
-            prevlineY = verticalLines[i][3];
-        }
-    }
-    
-    line(workingMask, cv::Point(prevlineX, prevlineY), cv::Point(prevlineX, workingMask.cols), Scalar(5), 2, 8);
-    //cv::dilate(workingMask, workingMask, _dilutionKernel);
-    floodFill(workingMask, cv::Point(image.cols/2, image.rows-1), Scalar(5));
-    cv::add(workingMask, thresholder, thresholder);
-    */
     line(image, cv::Point(newX1, newY1), cv::Point(newX2, newY2), Scalar(255,255, 255), 3, 8);
     
     Vec4i workingLine;
@@ -265,16 +235,13 @@ Mat _dilutionKernel;
     line(workingBinary, cv::Point(newX1, newY1) , cv::Point(newX2, newY2), Scalar(2), 1, 8);
     floodFill(workingBinary, cv::Point(fillX, fillY), Scalar(2));
     
+    // mask off the above-horizon area
     thresholder.setTo(Scalar(0), workingBinary);
     
-    //cv::cvtColor(thresholder, thresholder, CV_GRAY2BGR);
-    //cv::addWeighted(image, 1, thresholder, 10, 0, image);
-
-    
+    // Otsu thresholding on grayscale threshold cumulative image
     cv::threshold(thresholder, thresholder, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
     
     workingImage = Mat(image.rows, image.cols, CV_8UC3);
-    
     
     workingImage.setTo(Scalar(128, 0, 0), thresholder);
     
